@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="240" height="13" tilewidth="16" tileheight="16" nextobjectid="9">
+ <tileset firstgid="1" name="Dungeon_Terrain_Tileset" tilewidth="16" tileheight="16" tilecount="98" columns="14">
+  <image source="Dungeon/Terrain/Dungeon_Terrain_Tileset.png" width="224" height="112"/>
+ </tileset>
+ <tileset firstgid="99" name="Dungeon_Background_Far" tilewidth="16" tileheight="16" tilecount="312" columns="24">
+  <image source="Dungeon/Background/Dungeon_Background_Far.png" width="384" height="208"/>
+ </tileset>
+ <layer name="Background" width="240" height="13">
+  <data encoding="base64" compression="zlib">
+   eJzt1VmU1mMAx/H5z5SkMKNSolKEFu1aSLYWhIpKi1LNPqG02LJnpwhFspUWW4UWIkJ7kSXSRpsSlT1k7TPOcVF3zpnznv+85/me93PxXPx/V897npSUUCgUCoVCiS6TLLLJIZc88imgP5dxOVcwgIFcySAGM4ShXMXVXMO1XJcE+6FQnBvG9dzAjdzEzdzCrQznNm7nDu7kLu7mHu7lPkYwkvt5gFE8mAT7oVCce4iHGc0YHuFRxvIY43icJ3iSp3ia8UzgGSYyiclM4Vme4/kk2A+F4twLvMhUpjGdl3iZV5jBTGYxm1d5jTm8zhvM5U3eYh5v8w7vJsF+KBTn5rOAhSxiMUtYyjKW8x7vs4IP+JCP+JiVfMKnrOIzVrOGtUmwHwrFuXWs53O+YAMb2cRmtvAlW9nGV2zna75hBzvZxbd8x/f8wI9JsB8Kxbmf+Jnd/MKv/MYefucP/uQv/uafwo8iP1JJowQlOYBSHEhpDoqK/34oFOfKuKNlOZhDOJR0MjiMcpSnAodTkUocQWWO5CiqUJVqHE11akTFfz8UinPHuKPHUpPjOJ4TqEVt6lCXE6lHfRrQkEY0jv59zlJSSaOZQ3NacHJUNPtNOImmUeL3Q6E4d4o72pJTacVpnM4ZnMlZtKYNbWnH2ZzDubQvfPPspJNBB+eOdOLCqGj2z+N8LogSvx8Kxbn/3s7/o/Cd7evDfmTu9//Ndc4jnwIuojNd6MrFdKM7PejJJfSiN5fSJ9p3P4tscqLE74dCcW4v91SCPg==
+  </data>
+ </layer>
+ <layer name="Background overlay" width="240" height="13">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20KP6AAAAAAAAAAAAAAAAC+BjDAAAE=
+  </data>
+ </layer>
+ <layer name="Background overlay 2" width="240" height="13">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20KP6AAAAAAAAAAAAAAAAC+BjDAAAE=
+  </data>
+ </layer>
+ <layer name="Graphics" width="240" height="13">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20KP6AAAAAAAAAAAAAAAAC+BjDAAAE=
+  </data>
+ </layer>
+ <layer name="Graphics overlay" width="240" height="13">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20KP6AAAAAAAAAAAAAAAAC+BjDAAAE=
+  </data>
+ </layer>
+ <layer name="Interactive graphics layer" width="240" height="13">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20KP6AAAAAAAAAAAAAAAAC+BjDAAAE=
+  </data>
+ </layer>
+ <objectgroup name="Ground">
+  <object id="1" x="0" y="192" width="224" height="16"/>
+  <object id="2" x="272" y="160" width="48" height="48"/>
+  <object id="3" x="229" y="302"/>
+ </objectgroup>
+ <objectgroup name="Obstacles"/>
+ <objectgroup name="Coins"/>
+ <objectgroup name="Goal"/>
+</map>

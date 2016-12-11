@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="13" tilewidth="16" tileheight="16" nextobjectid="5">
+ <tileset firstgid="1" name="Grassland_Terrain_Tileset" tilewidth="16" tileheight="16" tilecount="98" columns="14">
+  <image source="../GrassLand/Terrain/Grassland_Terrain_Tileset.png" width="224" height="112"/>
+ </tileset>
+ <layer name="Background" width="30" height="13">
+  <data encoding="base64" compression="zlib">
+   eJxjYBh8gB+IBYBYEIiFgFgYiEXoYK8sEMsBsTwQKwCxIhArDQF3DWYwGmajgFKgDcQ6QKyLJMZPAiY2/WGzBx3IkoCpkf4YgZiJBpiZgL0AJjUHhw==
+  </data>
+ </layer>
+ <layer name="interactive_graphics_layer" width="30" height="13">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMAoQAAAGGAAB
+  </data>
+ </layer>
+ <objectgroup name="ground">
+  <object id="1" x="0" y="192" width="368" height="16"/>
+  <object id="3" x="368" y="160" width="48" height="16"/>
+  <object id="4" x="432" y="144" width="48" height="16"/>
+ </objectgroup>
+ <objectgroup name="coins"/>
+</map>

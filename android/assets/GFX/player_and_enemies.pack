@@ -1,0 +1,33 @@
+
+player_and_enemies.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+little_mario
+  rotate: false
+  xy: 1, 1
+  size: 224, 16
+  orig: 224, 16
+  offset: 0, 0
+  index: -1
+little_mario2
+  rotate: false
+  xy: 227, 1
+  size: 224, 16
+  orig: 224, 16
+  offset: 0, 0
+  index: -1
+HeroEast
+  rotate: false
+  xy: 453, 1
+  size: 112, 16
+  orig: 112, 16
+  offset: 0, 0
+  index: -1
+char_1_east
+  rotate: false
+  xy: 567, 1
+  size: 80, 16
+  orig: 80, 16
+  offset: 0, 0
+  index: -1

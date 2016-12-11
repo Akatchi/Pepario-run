@@ -1,0 +1,14 @@
+[
+{
+	class: com.pepario.run.JsonObjects.LeaderboardEntry
+	key: LEVEL_1
+	name: lkj
+	value: 1490
+}
+{
+	class: com.pepario.run.JsonObjects.LeaderboardEntry
+	key: LEVEL_1
+	name: Vasco
+	value: 960
+}
+]
