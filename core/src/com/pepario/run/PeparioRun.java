@@ -5,11 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.pepario.run.Levels.Level;
-import com.pepario.run.Levels.LevelFactory;
-import com.pepario.run.Scenes.GameHud;
-import com.pepario.run.Screens.GameScreen;
-import com.pepario.run.Screens.MenuScreen;
+import com.pepario.run.Screens.LevelSelectScreen;
 
 public class PeparioRun extends Game
 {
@@ -23,7 +19,7 @@ public class PeparioRun extends Game
 
 		assetManager = initAssetManager();
 
-        setScreen(new MenuScreen(this));
+        setScreen(new LevelSelectScreen(this));
 	}
 
 	@Override

@@ -6,10 +6,8 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.MapLayers;
-import com.badlogic.gdx.maps.tiled.*;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -17,17 +15,13 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pepario.run.Config.Config;
 import com.pepario.run.Levels.Level;
-import com.pepario.run.Levels.LevelFactory;
 import com.pepario.run.PeparioRun;
-import com.pepario.run.Popups.HighscoreInputListener;
 import com.pepario.run.Scenes.GameHud;
 import com.pepario.run.Sprites.Player;
 import com.pepario.run.Tools.B2WorldCreator;
-import com.pepario.run.Tools.LeaderboardManager;
 import com.pepario.run.Tools.WorldContactListener;
 
-public class GameScreen extends BaseGameScreen
-{
+public class GameScreen extends BaseGameScreen {
     private PeparioRun game;
 
     private OrthographicCamera camera;
@@ -50,15 +44,7 @@ public class GameScreen extends BaseGameScreen
 
     private Level level;
 
-    private TmxMapLoader maploader;
-
-    public GameScreen(PeparioRun game)
-    {
-        this(game, LevelFactory.getLevel(1));
-    }
-
-    public GameScreen(PeparioRun game, Level level)
-    {
+    public GameScreen(PeparioRun game, Level level) {
         this.game = game;
         this.level = level;
 
@@ -69,12 +55,8 @@ public class GameScreen extends BaseGameScreen
 
         hud = new GameHud(game.getSpriteBatch());
 
-//        mapRenderer = getMapRendererForLevelName(level.getLevelTMXFile());
-        // map = mapRenderer.getMap();
-        // TODO DEBUG CODE FOR FIXING HTE MAP
-        maploader = new TmxMapLoader();
-        map = maploader.load("level_chunks/chunk1.tmx");
-        mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / Config.PPM);
+        mapRenderer = getMapRendererForLevelName(level.getTmxLevelName());
+        map = mapRenderer.getMap();
 
         camera.position.set(viewPort.getWorldWidth() / 2, viewPort.getWorldHeight() / 2, 0);
 
@@ -96,79 +78,36 @@ public class GameScreen extends BaseGameScreen
         music.play();
     }
 
-    private boolean load = false;
-
-    private void update(float deltaTime)
-    {
+    private void update(float deltaTime) {
         handleInput();
 
         player.update(deltaTime);
 
-        if(player.canProcessInput()) {
-            // Only update the hud if the player is alive and hasn't completed the level
+        if (!player.isDead()) {
+            // Only update the hud if the player is alive
             hud.update(deltaTime);
-            // Follow the player if it's alive -> @TODO should become autoscrolling in the future?
+            // Follow the player if it's alive -> @TODO should become autoscrolling in the future
             camera.position.x = player.getBody().getPosition().x;
         }
 
         doOneWorldStep(world);
 
-        // TODO debug code
-        if(player.getX() > 2 && !load) {
-            System.out.println("loading once");
-            load = true;
-
-            map = maploader.load("level_chunks/chunk2.tmx");
-
-
-            mapRenderer.setMap(map);
-        }
-
-
         camera.update();
         mapRenderer.setView(camera);
 
         // If the player is dead for at least 3 seconds, we will show the game over screen
-        if(player.isDead() && player.getStateTimer() > 3) {
-            // Prompt the user for their name if they made it to the highscore
-            if(LeaderboardManager.isLeaderboardWorthyScore(level.getLeaderboardKey(), getHud().getScoreCount())) {
-                Gdx.input.getTextInput(
-                        new HighscoreInputListener(level.getLeaderboardKey(), getHud().getScoreCount()),
-                        "Insert your name for the leaderboard",
-                        "",
-                        "your name"
-                );
-            }
-
+        if (player.isDead() && player.getStateTimer() > 3) {
             music.stop();
-            game.setScreen(new GameOverScreen(game));
-            dispose();
-        } else if(player.completedLevel() && player.getStateTimer() > 2) {
-            // If the player completed the level and we waited 2 seconds, we will move to the next level
-
-            // Prompt the user for their name if they made it to the highscore
-            if(LeaderboardManager.isLeaderboardWorthyScore(level.getLeaderboardKey(), getHud().getScoreCount())) {
-                Gdx.input.getTextInput(
-                        new HighscoreInputListener(level.getLeaderboardKey(), getHud().getScoreCount()),
-                        "Insert your name for the leaderboard",
-                        "",
-                        "your name"
-                );
-            }
-
-            music.stop();
-            game.setScreen(new GameScreen(
-                    game,
-                    LevelFactory.getLevel(level.getNextLevelId())
-            ));
+            game.setScreen(new GameOverScreen(game, level));
             dispose();
         }
     }
 
-    private void handleInput()
-    {
-        // Jump whenever the screen is touched or any key is pressed
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY) || Gdx.input.isTouched()) {
+    private void handleInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
+            player.jump();
+        }
+        if (Gdx.input.isTouched()) {
             player.jump();
         }
 
@@ -176,18 +115,17 @@ public class GameScreen extends BaseGameScreen
         player.moveRight();
     }
 
-    private void doOneWorldStep(World world)
-    {
+    private void doOneWorldStep(World world) {
         // 60fps
         world.step(1 / 60f, 6, 2);
     }
 
     @Override
-    public void show() {}
+    public void show() {
+    }
 
     @Override
-    public void render(float deltaTime)
-    {
+    public void render(float deltaTime) {
         update(deltaTime);
         clearScreen();
 
@@ -207,24 +145,25 @@ public class GameScreen extends BaseGameScreen
     }
 
     @Override
-    public void resize(int width, int height)
-    {
+    public void resize(int width, int height) {
         // Update our viewport after the screen is resized
         viewPort.update(width, height);
     }
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+    }
 
     @Override
-    public void hide() {}
+    public void hide() {
+    }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         // TODO fix the dispose
     }
 
@@ -244,14 +183,12 @@ public class GameScreen extends BaseGameScreen
     }
 
     @Override
-    public AssetManager getAssetManager()
-    {
+    public AssetManager getAssetManager() {
         return game.getAssetManager();
     }
 
     @Override
-    public TextureAtlas getTextureAtlas()
-    {
+    public TextureAtlas getTextureAtlas() {
         return textureAtlas;
     }
 }

@@ -3,19 +3,29 @@ package com.pepario.run.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pepario.run.Config.Config;
+import com.pepario.run.Levels.LevelFactory;
+import com.pepario.run.PagedScrollPane;
 import com.pepario.run.PeparioRun;
 
-public class MenuScreen implements Screen
-{
+public class LevelSelectScreen implements Screen {
     private PeparioRun game;
     private Camera camera;
     private Viewport viewPort;
@@ -26,8 +36,9 @@ public class MenuScreen implements Screen
 
     private Music music;
 
-    public MenuScreen(PeparioRun game)
-    {
+    private Table container;
+
+    public LevelSelectScreen(PeparioRun game) {
         this.game = game;
 
         setupSkin();
@@ -49,10 +60,35 @@ public class MenuScreen implements Screen
 
         //Stage should controll input:
         Gdx.input.setInputProcessor(stage);
+
+        // Dennis
+        container = new Table();
+        stage.addActor(container);
+        container.setFillParent(true);
+
+        PagedScrollPane scroll = new PagedScrollPane();
+        scroll.setFlingTime(0.1f);
+        scroll.setPageSpacing(0);
+        scroll.setFillParent(true);
+
+        int c = 1;
+        for (int l = 0; l < 2; l++) {
+            Table levels = new Table().pad(50).padBottom(0);
+            levels.defaults().pad(20);
+
+            for (int y = 0; y < 2; y++) {
+                levels.row();
+                for (int x = 0; x < 4; x++) {
+                    levels.add(getLevelButton(c++)).expand().fill();
+                }
+            }
+            scroll.addPage(levels);
+        }
+        container.add(scroll).expand().fill();
+
     }
 
-    private void setupSkin()
-    {
+    private void setupSkin() {
         //Create a font
         BitmapFont font = new BitmapFont();
         skin = new Skin();
@@ -91,8 +127,7 @@ public class MenuScreen implements Screen
     }
 
     @Override
-    public void show()
-    {
+    public void show() {
         //Create buttons
         ImageButton playButton = new ImageButton(skin, "start_game");
         ImageButton leaderboardButton = new ImageButton(skin, "leaderboard");
@@ -100,7 +135,7 @@ public class MenuScreen implements Screen
         Label gameTitleText = new Label("Pepario Run!", skin);
 
         //Add listeners to buttons
-        playButton.addListener(new ClickListener(){
+        playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 music.stop();
@@ -141,8 +176,7 @@ public class MenuScreen implements Screen
     }
 
     @Override
-    public void render(float delta)
-    {
+    public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -154,26 +188,82 @@ public class MenuScreen implements Screen
     }
 
     @Override
-    public void resize(int width, int height)
-    {
+    public void resize(int width, int height) {
         viewPort.update(width, height);
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
     }
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+    }
 
     @Override
-    public void hide() {}
+    public void hide() {
+    }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         stage.dispose();
         music.dispose();
     }
+
+    /**
+     * Creates a button to represent the level
+     *
+     * @param level
+     * @return The button to use for the level
+     */
+    public Button getLevelButton(int level) {
+        Button button = new ImageButton(skin, "start_game");
+        Button.ButtonStyle style = button.getStyle();
+        style.up = style.down = null;
+
+        // Create the label to show the level number
+        Label label = new Label(Integer.toString(level), skin);
+//        label.setFontScale(2f);
+        label.setAlignment(Align.center);
+
+        // Stack the image and the label at the top of our button
+        button.stack(label).expand().fill();
+
+//        // Randomize the number of stars earned for demonstration purposes
+//        int stars = MathUtils.random(-1, +3);
+//        Table starTable = new Table();
+//        starTable.defaults().pad(5);
+//        if (stars >= 0) {
+//            for (int star = 0; star < 3; star++) {
+//                if (stars > star) {
+//                    starTable.add(new Image(skin.getDrawable("star-filled"))).width(20).height(20);
+//                } else {
+//                    starTable.add(new Image(skin.getDrawable("star-unfilled"))).width(20).height(20);
+//                }
+//            }
+//        }
+
+        button.row();
+//        button.add(starTable).height(30);
+
+        button.setName(Integer.toString(level));
+        button.addListener(levelClickListener);
+        return button;
+    }
+
+    /**
+     * Handle the click - in real life, we'd go to the level
+     */
+    public ClickListener levelClickListener = new ClickListener() {
+        @Override
+        public void clicked(InputEvent event, float x, float y) {
+            System.out.println("Click: " + event.getListenerActor().getName());
+            music.stop();
+            game.setScreen(new GameScreen(game, LevelFactory.getLevel(Integer.parseInt(event.getListenerActor().getName()))));
+            dispose();
+        }
+    };
+
 }

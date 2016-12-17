@@ -13,11 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pepario.run.Config.Config;
-import com.pepario.run.Levels.LevelFactory;
+import com.pepario.run.Levels.Level;
 import com.pepario.run.PeparioRun;
 
-public class GameOverScreen implements Screen
-{
+public class GameOverScreen implements Screen {
+    private Level level = null;
     private Viewport viewport;
     private Stage stage;
     private PeparioRun game;
@@ -26,8 +26,7 @@ public class GameOverScreen implements Screen
     private Label gameOverLabel;
     private Label playAgainLabel;
 
-    public GameOverScreen(PeparioRun game)
-    {
+    public GameOverScreen(PeparioRun game) {
         this.game = game;
 
         viewport = new FitViewport(Config.WIDTH, Config.HEIGHT, new OrthographicCamera());
@@ -40,16 +39,19 @@ public class GameOverScreen implements Screen
         music.play();
     }
 
-    private void initHudElements()
-    {
+    public GameOverScreen(PeparioRun game, Level level) {
+        this(game);
+        this.level = level;
+    }
+
+    private void initHudElements() {
         Label.LabelStyle font = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
 
         gameOverLabel = new Label("GAME OVER", font);
         playAgainLabel = new Label("Click to play again", font);
     }
 
-    private Table getTableWithHudElements()
-    {
+    private Table getTableWithHudElements() {
         Table table = new Table();
         table.center();
         table.setFillParent(true);
@@ -61,8 +63,7 @@ public class GameOverScreen implements Screen
         return table;
     }
 
-    private Music getScreenMusic()
-    {
+    private Music getScreenMusic() {
         music = game.getAssetManager().get("audio/music/game_over.ogg", Music.class);
         music.setLooping(true);
 
@@ -70,14 +71,18 @@ public class GameOverScreen implements Screen
     }
 
     @Override
-    public void show() {}
+    public void show() {
+    }
 
     @Override
-    public void render(float delta)
-    {
-        if(Gdx.input.justTouched()) {
+    public void render(float delta) {
+        if (Gdx.input.justTouched()) {
             music.stop();
-            game.setScreen(new GameScreen(game, LevelFactory.getLevel(1)));
+            if (level != null) {
+                game.setScreen(new GameScreen(game, level));
+            } else {
+                game.setScreen(new EndlessGameScreen(game));
+            }
             dispose();
         }
 
@@ -88,20 +93,23 @@ public class GameOverScreen implements Screen
     }
 
     @Override
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+    }
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+    }
 
     @Override
-    public void hide() {}
+    public void hide() {
+    }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         stage.dispose();
     }
 }
